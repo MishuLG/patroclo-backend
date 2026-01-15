@@ -1,29 +1,31 @@
-// src/controllers/publicationController.js
-const Publication = require('../models/Publication');
+const db = require('../data/mockDB');
 
-const createPublication = async (req, res) => {
-    try {
-        const { title, body } = req.body;
-        // Si se subió un archivo, multer lo pone en req.file
-        const mediaUrl = req.file ? `/uploads/${req.file.filename}` : null;
-        const mediaType = req.file ? req.file.mimetype : null;
+const publicationController = {
+    getAll: (req, res) => res.json(db.publications),
 
-        const newPost = await Publication.create({
-            title,
-            body,
-            mediaUrl,
-            mediaType
-        });
-        
-        res.status(201).json(newPost);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+    create: (req, res) => {
+        const post = { id: Date.now(), likes: 0, ...req.body };
+        db.publications.push(post);
+        res.status(201).json(post);
+    },
+
+    delete: (req, res) => {
+        const { id } = req.params;
+        db.publications = db.publications.filter(p => p.id != id);
+        res.json({ message: 'Publicación eliminada' });
+    },
+
+    // --- ACCIÓN ADICIONAL: DAR LIKE ---
+    likePost: (req, res) => {
+        const { id } = req.params;
+        const post = db.publications.find(p => p.id == id);
+        if (post) {
+            post.likes += 1;
+            res.json({ message: 'Like agregado', likes: post.likes });
+        } else {
+            res.status(404).json({ message: 'Publicación no encontrada' });
+        }
     }
 };
 
-const getPublications = async (req, res) => {
-    const posts = await Publication.findAll({ order: [['date', 'DESC']] });
-    res.json(posts);
-};
-
-module.exports = { createPublication, getPublications };
+module.exports = publicationController;

@@ -1,33 +1,34 @@
-// src/controllers/userController.js
-const User = require('../models/User');
-const { Op } = require('sequelize');
+const db = require('../data/mockDB');
 
-const getUsers = async (req, res) => {
-    const users = await User.findAll();
-    res.json(users);
-};
+const userController = {
+    getAll: (req, res) => res.json(db.users),
 
-const createUser = async (req, res) => {
-    try {
-        // Validaciones manuales de unicidad (aunque el modelo ya tiene unique: true)
-        const { cedula, correo, telefono } = req.body;
+    create: (req, res) => {
+        const newUser = { id: db.users.length + 1, ...req.body };
+        db.users.push(newUser);
+        res.status(201).json({ message: 'Usuario registrado', user: newUser });
+    },
+
+    update: (req, res) => {
+        const { id } = req.params;
+        const index = db.users.findIndex(u => u.id == id);
         
-        const exists = await User.findOne({
-            where: {
-                [Op.or]: [{ cedula }, { correo }, { telefono }]
-            }
-        });
-
-        if (exists) {
-            return res.status(400).json({ error: 'Cédula, correo o teléfono ya registrados.' });
+        if (index !== -1) {
+            db.users[index] = { ...db.users[index], ...req.body };
+            res.json({ message: 'Usuario actualizado', user: db.users[index] });
+        } else {
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
+    },
 
-        const newUser = await User.create(req.body);
-        res.status(201).json(newUser);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+    delete: (req, res) => {
+        const { id } = req.params;
+        const initialLength = db.users.length;
+        db.users = db.users.filter(u => u.id != id);
+        
+        if (db.users.length < initialLength) res.json({ message: 'Usuario eliminado' });
+        else res.status(404).json({ message: 'Usuario no encontrado' });
     }
 };
 
-// ... Agregar update y delete siguiendo la misma lógica
-module.exports = { getUsers, createUser };
+module.exports = userController;

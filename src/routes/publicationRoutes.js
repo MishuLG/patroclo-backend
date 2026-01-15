@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const publicationController = require('../controllers/publicationController');
-const upload = require('../middlewares/uploadMiddleware');
 
-router.get('/', publicationController.getPublications);
-// 'mediaFile' debe coincidir con el nombre del campo en el FormData del frontend
-router.post('/', upload.single('mediaFile'), publicationController.createPublication);
+router.get('/', publicationController.getAll);
+router.post('/', publicationController.create);
+router.delete('/:id', publicationController.delete);
+// Ruta especial extra
+router.post('/:id/like', publicationController.likePost);
 
 module.exports = router;

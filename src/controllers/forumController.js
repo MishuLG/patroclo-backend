@@ -1,51 +1,25 @@
-// src/controllers/forumController.js
-const ForumPost = require('../models/ForumPost');
+const db = require('../data/mockDB');
 
-// Obtener todos los mensajes
-const getMessages = async (req, res) => {
-    try {
-        const messages = await ForumPost.findAll({ order: [['timestamp', 'ASC']] });
-        res.json(messages);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener mensajes' });
-    }
-};
+const forumController = {
+    getAll: (req, res) => res.json(db.forumPosts),
 
-// Crear mensaje (ya viene censurado por el middleware)
-const createMessage = async (req, res) => {
-    try {
-        const { author, content } = req.body;
-        const newMessage = await ForumPost.create({ author, content });
-        res.status(201).json(newMessage);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
+    create: (req, res) => {
+        const post = { id: Date.now(), replies: 0, status: 'abierto', ...req.body };
+        db.forumPosts.push(post);
+        res.status(201).json(post);
+    },
 
-// Dar Like
-const likeMessage = async (req, res) => {
-    try {
+    // --- ACCIÓN ADICIONAL: SIMULAR RESPUESTA ---
+    addReply: (req, res) => {
         const { id } = req.params;
-        const post = await ForumPost.findByPk(id);
-        if (!post) return res.status(404).json({ error: 'Mensaje no encontrado' });
-
-        post.likes += 1;
-        await post.save();
-        
-        res.json(post);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+        const post = db.forumPosts.find(p => p.id == id);
+        if (post) {
+            post.replies += 1;
+            res.json({ message: 'Nueva respuesta registrada', total_replies: post.replies });
+        } else {
+            res.status(404).json({ message: 'Tema no encontrado' });
+        }
     }
 };
 
-const deleteMessage = async (req, res) => {
-    try {
-        const { id } = req.params;
-        await ForumPost.destroy({ where: { id } });
-        res.json({ message: 'Mensaje eliminado' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-module.exports = { getMessages, createMessage, likeMessage, deleteMessage };
+module.exports = forumController;

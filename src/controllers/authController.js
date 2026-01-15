@@ -1,40 +1,34 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const db = require('../data/mockDB');
 
-const login = async (req, res) => {
-    try {
-        const { correo, password } = req.body;
+const authController = {
+    // REQUISITO: Login
+    login: (req, res) => {
+        const { username, password } = req.body;
+        const user = db.users.find(u => u.username === username && u.password === password);
 
-        // 1. Buscar usuario
-        const user = await User.findOne({ where: { correo } });
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+        if (user) {
+            // Simulamos token
+            const { password, ...userWithoutPass } = user;
+            return res.json({
+                message: 'Login exitoso',
+                token: `fake-jwt-token-${user.id}`,
+                user: userWithoutPass
+            });
         }
+        return res.status(401).json({ message: 'Credenciales inválidas' });
+    },
 
-        // 2. Verificar contraseña (encriptada vs texto plano)
-        // Nota: Al crear usuario deberías usar bcrypt.hash()
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ error: 'Contraseña incorrecta' });
+    // REQUISITO: Perfil de usuario con información
+    getProfile: (req, res) => {
+        const { id } = req.params;
+        const user = db.users.find(u => u.id == id);
+
+        if (user) {
+            const { password, ...userWithoutPass } = user;
+            return res.json(userWithoutPass);
         }
-
-        // 3. Generar Token
-        const token = jwt.sign(
-            { id: user.id, role: user.role }, 
-            'TU_SECRETO_SUPER_SECRETO', // En producción, usa process.env.JWT_SECRET
-            { expiresIn: '2h' }
-        );
-
-        res.json({
-            message: 'Login exitoso',
-            token,
-            user: { nombre: user.nombre, role: user.role }
-        });
-
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 };
 
-module.exports = { login };
+module.exports = authController;
