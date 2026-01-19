@@ -1,31 +1,41 @@
-const db = require('../data/mockDB');
+const api = require('../config/apiClient');
 
-const publicationController = {
-    getAll: (req, res) => res.json(db.publications),
-
-    create: (req, res) => {
-        const post = { id: Date.now(), likes: 0, ...req.body };
-        db.publications.push(post);
-        res.status(201).json(post);
-    },
-
-    delete: (req, res) => {
-        const { id } = req.params;
-        db.publications = db.publications.filter(p => p.id != id);
-        res.json({ message: 'Publicación eliminada' });
-    },
-
-    // --- ACCIÓN ADICIONAL: DAR LIKE ---
-    likePost: (req, res) => {
-        const { id } = req.params;
-        const post = db.publications.find(p => p.id == id);
-        if (post) {
-            post.likes += 1;
-            res.json({ message: 'Like agregado', likes: post.likes });
-        } else {
-            res.status(404).json({ message: 'Publicación no encontrada' });
-        }
-    }
+const getPublications = async (req, res) => {
+  try {
+    const { data } = await api.get('/publications');
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error obteniendo publicaciones' });
+  }
 };
 
-module.exports = publicationController;
+const createPublication = async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const authorId = req.user ? req.user.id : 1; 
+
+    const newPub = {
+      title,
+      content,
+      authorId,
+      createdAt: new Date()
+    };
+
+    const { data } = await api.post('/publications', newPub);
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creando publicación' });
+  }
+};
+
+const deletePublication = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await api.delete(`/publications/${id}`);
+    res.json({ message: 'Publicación eliminada' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error eliminando publicación' });
+  }
+};
+
+module.exports = { getPublications, createPublication, deletePublication };

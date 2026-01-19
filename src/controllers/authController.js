@@ -1,34 +1,58 @@
-const db = require('../data/mockDB');
+const api = require('../config/apiClient');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const authController = {
-    // REQUISITO: Login
-    login: (req, res) => {
-        const { username, password } = req.body;
-        const user = db.users.find(u => u.username === username && u.password === password);
+const SECRET_KEY = process.env.JWT_SECRET || 'supersecretkey';
 
-        if (user) {
-            // Simulamos token
-            const { password, ...userWithoutPass } = user;
-            return res.json({
-                message: 'Login exitoso',
-                token: `fake-jwt-token-${user.id}`,
-                user: userWithoutPass
-            });
-        }
-        return res.status(401).json({ message: 'Credenciales inválidas' });
-    },
+const register = async (req, res) => {
+  try {
+    const { username, password, email, role } = req.body;
 
-    // REQUISITO: Perfil de usuario con información
-    getProfile: (req, res) => {
-        const { id } = req.params;
-        const user = db.users.find(u => u.id == id);
-
-        if (user) {
-            const { password, ...userWithoutPass } = user;
-            return res.json(userWithoutPass);
-        }
-        return res.status(404).json({ message: 'Usuario no encontrado' });
+    const { data: users } = await api.get(`/users?username=${username}`);
+    if (users.length > 0) {
+      return res.status(400).json({ message: 'El usuario ya existe' });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      username,
+      password: hashedPassword,
+      email,
+      role: role || 'user',
+      createdAt: new Date()
+    };
+
+    const { data: createdUser } = await api.post('/users', newUser);
+    res.status(201).json({ message: 'Usuario registrado', user: createdUser });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Error en registro', error: error.message });
+  }
 };
 
-module.exports = authController;
+const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const { data: users } = await api.get(`/users?username=${username}`);
+    
+    if (users.length === 0) {
+      return res.status(400).json({ message: 'Credenciales inválidas' });
+    }
+
+    const user = users[0];
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Credenciales inválidas' });
+    }
+
+    const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    res.json({ message: 'Login exitoso', token, user });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Error en login', error: error.message });
+  }
+};
+
+module.exports = { register, login };

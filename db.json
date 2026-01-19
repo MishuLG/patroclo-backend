@@ -1,0 +1,73 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "123",
+      "role": "admin",
+      "email": "correo_actualizado@test.com"
+    },
+    {
+      "id": "2",
+      "username": "estudiante",
+      "password": "1234",
+      "role": "user",
+      "email": "user1@gmail.com"
+    },
+    {
+      "id": "c9bb",
+      "username": "usuario_nuevo",
+      "password": "$2a$10$G1LPPHPsuZbvwylkj/rrLO18Wx1M/DEw6GaCwRF2zqu8Df.BhcvUO",
+      "email": "usuario@test.com",
+      "role": "user",
+      "createdAt": "2026-01-16T12:24:44.928Z"
+    }
+  ],
+  "publications": [
+    {
+      "id": "1",
+      "title": "Bienvenida",
+      "content": "Esta es la primera publicación del sistema.",
+      "authorId": 1,
+      "createdAt": "2023-10-27T10:00:00.000Z"
+    }
+  ],
+  "forumPosts": [
+    {
+      "id": "1",
+      "title": "¿Cómo usar el sistema?",
+      "content": "Tengo dudas sobre su uso...",
+      "authorId": 2,
+      "createdAt": "2023-10-28T12:00:00.000Z"
+    },
+    {
+      "id": "1486",
+      "title": "Duda sobre Postman",
+      "content": "¿Cómo puedo guardar mis peticiones en una colección?",
+      "authorId": 1,
+      "createdAt": "2026-01-16T12:31:45.601Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "content": "Es muy sencillo, sigue el tutorial.",
+      "authorId": 1,
+      "postId": 1,
+      "createdAt": "2023-10-28T12:30:00.000Z"
+    },
+    {
+      "id": "15f7",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-16T12:33:46.018Z"
+    },
+    {
+      "id": "2aa3",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-16T12:34:14.195Z"
+    }
+  ]
+}

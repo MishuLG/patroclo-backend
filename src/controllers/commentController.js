@@ -1,25 +1,33 @@
-const db = require('../data/mockDB');
+const api = require('../config/apiClient');
 
-const commentController = {
-    getAll: (req, res) => res.json(db.comments),
-
-    create: (req, res) => {
-        const comment = { id: Date.now(), approved: false, ...req.body };
-        db.comments.push(comment);
-        res.status(201).json(comment);
-    },
-
-    // --- ACCIÓN ADICIONAL: APROBAR COMENTARIO ---
-    approve: (req, res) => {
-        const { id } = req.params;
-        const comment = db.comments.find(c => c.id == id);
-        if (comment) {
-            comment.approved = true;
-            res.json({ message: 'Comentario aprobado por admin', comment });
-        } else {
-            res.status(404).json({ message: 'Comentario no encontrado' });
-        }
-    }
+const getCommentsByPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { data } = await api.get(`/comments?postId=${postId}`);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error obteniendo comentarios' });
+  }
 };
 
-module.exports = commentController;
+const addComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { content } = req.body;
+    const authorId = req.user ? req.user.id : 1;
+
+    const newComment = {
+      content,
+      postId: parseInt(postId), 
+      authorId,
+      createdAt: new Date()
+    };
+
+    const { data } = await api.post('/comments', newComment);
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error agregando comentario' });
+  }
+};
+
+module.exports = { getCommentsByPost, addComment };

@@ -1,25 +1,31 @@
-const db = require('../data/mockDB');
+const api = require('../config/apiClient');
 
-const forumController = {
-    getAll: (req, res) => res.json(db.forumPosts),
-
-    create: (req, res) => {
-        const post = { id: Date.now(), replies: 0, status: 'abierto', ...req.body };
-        db.forumPosts.push(post);
-        res.status(201).json(post);
-    },
-
-    // --- ACCIÓN ADICIONAL: SIMULAR RESPUESTA ---
-    addReply: (req, res) => {
-        const { id } = req.params;
-        const post = db.forumPosts.find(p => p.id == id);
-        if (post) {
-            post.replies += 1;
-            res.json({ message: 'Nueva respuesta registrada', total_replies: post.replies });
-        } else {
-            res.status(404).json({ message: 'Tema no encontrado' });
-        }
-    }
+const getPosts = async (req, res) => {
+  try {
+    const { data } = await api.get('/forumPosts');
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error obteniendo foro' });
+  }
 };
 
-module.exports = forumController;
+const createPost = async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const authorId = req.user ? req.user.id : 1;
+
+    const newPost = {
+      title,
+      content,
+      authorId,
+      createdAt: new Date()
+    };
+
+    const { data } = await api.post('/forumPosts', newPost);
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creando post en foro' });
+  }
+};
+
+module.exports = { getPosts, createPost };

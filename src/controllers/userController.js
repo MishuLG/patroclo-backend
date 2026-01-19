@@ -1,34 +1,47 @@
-const db = require('../data/mockDB');
+const api = require('../config/apiClient');
 
-const userController = {
-    getAll: (req, res) => res.json(db.users),
-
-    create: (req, res) => {
-        const newUser = { id: db.users.length + 1, ...req.body };
-        db.users.push(newUser);
-        res.status(201).json({ message: 'Usuario registrado', user: newUser });
-    },
-
-    update: (req, res) => {
-        const { id } = req.params;
-        const index = db.users.findIndex(u => u.id == id);
-        
-        if (index !== -1) {
-            db.users[index] = { ...db.users[index], ...req.body };
-            res.json({ message: 'Usuario actualizado', user: db.users[index] });
-        } else {
-            res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-    },
-
-    delete: (req, res) => {
-        const { id } = req.params;
-        const initialLength = db.users.length;
-        db.users = db.users.filter(u => u.id != id);
-        
-        if (db.users.length < initialLength) res.json({ message: 'Usuario eliminado' });
-        else res.status(404).json({ message: 'Usuario no encontrado' });
-    }
+const getAllUsers = async (req, res) => {
+  try {
+    const { data } = await api.get('/users');
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuarios' });
+  }
 };
 
-module.exports = userController;
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data } = await api.get(`/users/${id}`);
+    res.json(data);
+  } catch (error) {
+    res.status(404).json({ message: 'Usuario no encontrado' });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data } = await api.patch(`/users/${id}`, req.body);
+    res.json({ message: 'Usuario actualizado', user: data });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar usuario' });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await api.delete(`/users/${id}`);
+    res.json({ message: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar usuario' });
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser
+};
