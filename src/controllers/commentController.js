@@ -1,33 +1,51 @@
-const api = require('../config/apiClient');
+const Comment = require('../models/Comment');
+const User = require('../models/User');
 
-const getCommentsByPost = async (req, res) => {
+// Obtener comentarios de un post específico
+exports.getComments = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { data } = await api.get(`/comments?postId=${postId}`);
-    res.json(data);
+    const comments = await Comment.findAll({
+      where: { foro_post_id: postId },
+      include: [
+        {
+          model: User,
+          as: 'autor',
+          attributes: ['id', 'username', 'nombre', 'apellido']
+        }
+      ],
+      order: [['fecha_creacion', 'ASC']]
+    });
+    res.json(comments);
   } catch (error) {
-    res.status(500).json({ message: 'Error obteniendo comentarios' });
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener comentarios' });
   }
 };
 
-const addComment = async (req, res) => {
+// Crear un comentario
+exports.createComment = async (req, res) => {
   try {
-    const { postId } = req.params;
-    const { content } = req.body;
-    const authorId = req.user ? req.user.id : 1;
+    const { contenido, foro_post_id } = req.body;
+    const autor_id = req.user.id;
 
-    const newComment = {
-      content,
-      postId: parseInt(postId), 
-      authorId,
-      createdAt: new Date()
-    };
+    if (!foro_post_id) {
+      return res.status(400).json({ message: 'El ID del post es obligatorio' });
+    }
 
-    const { data } = await api.post('/comments', newComment);
-    res.status(201).json(data);
+    const newComment = await Comment.create({
+      contenido,
+      foro_post_id,
+      autor_id
+    });
+
+    const commentWithAuthor = await Comment.findByPk(newComment.id, {
+      include: [{ model: User, as: 'autor', attributes: ['username', 'nombre'] }]
+    });
+
+    res.status(201).json(commentWithAuthor);
   } catch (error) {
-    res.status(500).json({ message: 'Error agregando comentario' });
+    console.error(error);
+    res.status(500).json({ message: 'Error al crear el comentario' });
   }
 };
-
-module.exports = { getCommentsByPost, addComment };

@@ -1,58 +1,91 @@
-const api = require('../config/apiClient');
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.JWT_SECRET || 'supersecretkey';
-
-const register = async (req, res) => {
+// Registrar Usuario
+exports.register = async (req, res) => {
   try {
-    const { username, password, email, role } = req.body;
+    const { username, email, password, nombre, apellido, cedula, semestre, carrera_id } = req.body;
 
-    const { data: users } = await api.get(`/users?username=${username}`);
-    if (users.length > 0) {
-      return res.status(400).json({ message: 'El usuario ya existe' });
+    // Validar si el usuario ya existe
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: 'El correo electrónico ya está registrado.' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = {
+    const existingCedula = await User.findOne({ where: { cedula } });
+    if (existingCedula) {
+      return res.status(400).json({ message: 'La cédula ya está registrada.' });
+    }
+
+    // Encriptar contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Crear usuario en la BD
+    const newUser = await User.create({
       username,
-      password: hashedPassword,
       email,
-      role: role || 'user',
-      createdAt: new Date()
-    };
+      password: hashedPassword,
+      nombre,
+      apellido,
+      cedula,
+      semestre,
+      carrera_id, // Asegúrate de enviar el ID de la carrera desde el frontend
+      rol_id: 2 // Asignamos 'Estudiante' por defecto (según tu DB SQL)
+    });
 
-    const { data: createdUser } = await api.post('/users', newUser);
-    res.status(201).json({ message: 'Usuario registrado', user: createdUser });
+    res.status(201).json({
+      message: 'Usuario registrado exitosamente.',
+      userId: newUser.id
+    });
 
   } catch (error) {
-    res.status(500).json({ message: 'Error en registro', error: error.message });
+    console.error('Error en registro:', error);
+    res.status(500).json({ message: 'Error en el servidor al registrar usuario.' });
   }
 };
 
-const login = async (req, res) => {
+// Iniciar Sesión
+exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const { data: users } = await api.get(`/users?username=${username}`);
-    
-    if (users.length === 0) {
-      return res.status(400).json({ message: 'Credenciales inválidas' });
+    // Buscar usuario
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    const user = users[0];
+    // Verificar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-      return res.status(400).json({ message: 'Credenciales inválidas' });
+      return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ message: 'Login exitoso', token, user });
+    // Crear Token JWT
+    const token = jwt.sign(
+      { id: user.id, role: user.rol_id, username: user.username },
+      process.env.JWT_SECRET || 'secreto_super_seguro', // Usa variables de entorno en producción
+      { expiresIn: '24h' }
+    );
+
+    // Responder con datos del usuario (sin el password)
+    res.json({
+      message: 'Inicio de sesión exitoso.',
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        rol_id: user.rol_id
+      }
+    });
 
   } catch (error) {
-    res.status(500).json({ message: 'Error en login', error: error.message });
+    console.error('Error en login:', error);
+    res.status(500).json({ message: 'Error en el servidor durante el inicio de sesión.' });
   }
 };
-
-module.exports = { register, login };

@@ -8,28 +8,67 @@
       "email": "correo_actualizado@test.com"
     },
     {
-      "id": "2",
-      "username": "estudiante",
-      "password": "1234",
-      "role": "user",
-      "email": "user1@gmail.com"
-    },
-    {
       "id": "c9bb",
       "username": "usuario_nuevo",
       "password": "$2a$10$G1LPPHPsuZbvwylkj/rrLO18Wx1M/DEw6GaCwRF2zqu8Df.BhcvUO",
-      "email": "usuario@test.com",
+      "email": "liander12345@gmail.com",
       "role": "user",
       "createdAt": "2026-01-16T12:24:44.928Z"
+    },
+    {
+      "id": "f106",
+      "username": "liander",
+      "password": "$2a$10$Eh9kZUqt1LNoQchexgBWb.CEvx1gT0u.sTmd/8fgjR.t.FprBPcGm",
+      "email": "liander12345@gmail.com",
+      "role": "user",
+      "createdAt": "2026-01-16T14:13:05.102Z"
+    },
+    {
+      "id": "644c",
+      "username": "liander claret",
+      "password": "$2b$10$XJymtT0nlR7mUBxlgiID7.MruwP7EK3/W.381/vcQ6foSVatrHNoO",
+      "email": "liander12345@gmail.com",
+      "role": "user",
+      "createdAt": "2026-01-16T16:19:51.223Z"
+    },
+    {
+      "id": "4d34",
+      "username": "el carlos",
+      "password": "$2b$10$zJCbOf0SKrYrr2PI7YCit.37CJ40qdKy.NViiF0xpzSAocFbMSQRO",
+      "email": "el carlos@gmail.com",
+      "role": "user",
+      "createdAt": "2026-01-16T16:21:01.110Z"
+    },
+    {
+      "id": "b83f",
+      "username": "el carlos ohh",
+      "password": "$2b$10$pWoQbpE6Z653Gi8tLTSoKu/upwMwupkTH5L3fapjPpPbjl5a.CC7O",
+      "email": "carlosñapa@gmail.com",
+      "role": "user",
+      "createdAt": "2026-01-16T16:27:34.084Z"
     }
   ],
   "publications": [
     {
-      "id": "1",
-      "title": "Bienvenida",
-      "content": "Esta es la primera publicación del sistema.",
+      "id": "8fce",
+      "title": "¡Hola gente!",
+      "content": "Estoy probando el sistema siuuuuu.",
       "authorId": 1,
-      "createdAt": "2023-10-27T10:00:00.000Z"
+      "createdAt": "2026-01-17T00:38:07.560Z"
+    },
+    {
+      "id": "2350",
+      "title": "¡Hola gente!",
+      "content": "Estoy probando el sistema siuuuuu.",
+      "authorId": 1,
+      "createdAt": "2026-01-17T01:45:45.250Z"
+    },
+    {
+      "id": "dc0c",
+      "title": "¡Hola genteeeeeeeee!",
+      "content": "Estoy probando el sistema siuuuuuuuuu.",
+      "authorId": 1,
+      "createdAt": "2026-01-17T01:45:57.395Z"
     }
   ],
   "forumPosts": [
@@ -46,6 +85,20 @@
       "content": "¿Cómo puedo guardar mis peticiones en una colección?",
       "authorId": 1,
       "createdAt": "2026-01-16T12:31:45.601Z"
+    },
+    {
+      "id": "fc84",
+      "title": "holaaaaa",
+      "content": "¿Cómo puedo guardar mis peticiones en una colección?",
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:40:06.980Z"
+    },
+    {
+      "id": "81d0",
+      "title": "holaaaaa",
+      "content": "¿Cómo puedo guardar mis peticiones en una colección?",
+      "authorId": 1,
+      "createdAt": "2026-01-17T01:46:41.177Z"
     }
   ],
   "comments": [
@@ -68,6 +121,209 @@
       "postId": 1486,
       "authorId": 1,
       "createdAt": "2026-01-16T12:34:14.195Z"
+    },
+    {
+      "id": "305b",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-16T16:28:57.872Z"
+    },
+    {
+      "id": "7260",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:40:34.380Z"
+    },
+    {
+      "id": "1b61",
+      "content": "kheeee.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:40:48.971Z"
+    },
+    {
+      "id": "a3b9",
+      "content": "siuuuuuuuuu.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:41:33.087Z"
+    },
+    {
+      "id": "b06d",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:42:36.353Z"
+    },
+    {
+      "id": "3674",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:45:04.770Z"
+    },
+    {
+      "id": "8b50",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:45:59.797Z"
+    },
+    {
+      "id": "39a4",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:46:02.798Z"
+    },
+    {
+      "id": "e4c5",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:46:07.449Z"
+    },
+    {
+      "id": "9f16",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:46:14.206Z"
+    },
+    {
+      "id": "e5e5",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:48:41.878Z"
+    },
+    {
+      "id": "948f",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": 1486,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:49:37.099Z"
+    },
+    {
+      "id": "d691",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:16.512Z"
+    },
+    {
+      "id": "012a",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:19.352Z"
+    },
+    {
+      "id": "a669",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:20.767Z"
+    },
+    {
+      "id": "1b6d",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:21.884Z"
+    },
+    {
+      "id": "5de3",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:22.706Z"
+    },
+    {
+      "id": "2e2c",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:23.533Z"
+    },
+    {
+      "id": "5ec7",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:24.303Z"
+    },
+    {
+      "id": "38bf",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:25.073Z"
+    },
+    {
+      "id": "b9ba",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:25.796Z"
+    },
+    {
+      "id": "f955",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:26.482Z"
+    },
+    {
+      "id": "c597",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:27.172Z"
+    },
+    {
+      "id": "05ee",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:27.765Z"
+    },
+    {
+      "id": "3cd3",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:28.394Z"
+    },
+    {
+      "id": "9972",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:29.023Z"
+    },
+    {
+      "id": "69ee",
+      "content": "Solo tienes que darle a Ctrl+S y crear una carpeta nueva.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:51:29.845Z"
+    },
+    {
+      "id": "4505",
+      "content": "viva chavezzzz.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T00:52:39.737Z"
+    },
+    {
+      "id": "6ebf",
+      "content": "probando.",
+      "postId": null,
+      "authorId": 1,
+      "createdAt": "2026-01-17T01:47:13.788Z"
     }
   ]
 }

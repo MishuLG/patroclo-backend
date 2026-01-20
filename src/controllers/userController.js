@@ -1,47 +1,49 @@
-const api = require('../config/apiClient');
+const User = require('../models/User');
 
-const getAllUsers = async (req, res) => {
+// Obtener todos los usuarios (para admin o listas)
+exports.getAllUsers = async (req, res) => {
   try {
-    const { data } = await api.get('/users');
-    res.json(data);
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'nombre', 'apellido', 'carrera_id', 'semestre'] // Excluir password
+    });
+    res.json(users);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error al obtener usuarios' });
   }
 };
 
-const getUserById = async (req, res) => {
+// Obtener perfil del usuario autenticado
+exports.getProfile = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { data } = await api.get(`/users/${id}`);
-    res.json(data);
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password'] }
+    });
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+    res.json(user);
   } catch (error) {
-    res.status(404).json({ message: 'Usuario no encontrado' });
+    res.status(500).json({ message: 'Error del servidor' });
   }
 };
 
-const updateUser = async (req, res) => {
+// Actualizar usuario
+exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { data } = await api.patch(`/users/${id}`, req.body);
-    res.json({ message: 'Usuario actualizado', user: data });
+    // Solo permitir que el usuario se edite a sí mismo (a menos que sea admin)
+    if (parseInt(id) !== req.user.id && req.user.role !== 1) {
+        return res.status(403).json({ message: 'No tienes permiso para editar este usuario' });
+    }
+
+    const { nombre, apellido, telefono } = req.body;
+    
+    await User.update(
+      { nombre, apellido, telefono },
+      { where: { id } }
+    );
+
+    res.json({ message: 'Usuario actualizado correctamente' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar usuario' });
   }
-};
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    await api.delete(`/users/${id}`);
-    res.json({ message: 'Usuario eliminado correctamente' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar usuario' });
-  }
-};
-
-module.exports = {
-  getAllUsers,
-  getUserById,
-  updateUser,
-  deleteUser
 };
